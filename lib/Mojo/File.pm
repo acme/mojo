@@ -121,7 +121,7 @@ sub get_chunk {
     # EOF
     return '' if $offset > $length;
 
-    # Seek to start
+    # Seek to offset
     $self->handle->seek($offset, SEEK_SET);
 
     # Read
