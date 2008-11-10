@@ -23,7 +23,7 @@ sub dispatch {
     $c->match($match);
 
     # Shortcut
-    return $self unless $match;
+    return 0 unless $match;
 
     # Walk the stack
     my $stack = $match->stack;
@@ -51,10 +51,19 @@ sub dispatch {
             # Run action
             $instance->$action($c);
         };
-        warn "Dispatch error (propably harmless):\n$@" if $@;
+
+        # Error
+        if ($@) {
+            warn "Dispatch error (propably harmless):\n$@";
+            return 0;
+        }
     }
 
-    return $self;
+    # No stack, fail
+    return 0 unless @$stack;
+
+    # All seems ok
+    return 1;
 }
 
 1;
@@ -96,7 +105,7 @@ implements the follwing the ones.
 
 =head2 C<dispatch>
 
-    $dispatcher = $dispatcher->dispatch(
+    my $success = $dispatcher->dispatch(
         MojoX::Dispatcher::Routes::Context->new
     );
 

@@ -10,10 +10,13 @@ use base 'Mojo::Base';
 # No imports to make subclassing a bit easier
 require Carp;
 
+use Mojo::Home;
 use Mojo::Transaction;
 
+__PACKAGE__->attr('home', chained => 1, default => sub { Mojo::Home->new });
+
 # Oh, so they have internet on computers now!
-our $VERSION = '0.8009';
+our $VERSION = '0.8010';
 
 sub build_tx { return Mojo::Transaction->new }
 
@@ -55,6 +58,15 @@ You can just pick the ones you like and ignore the rest, there is no
 tradeoff.
 
 For userfriendly documentation see L<Mojo::Manual>.
+
+=head1 ATTRIBUTES
+
+L<Mojo> implements the following attributes.
+
+=head2 C<home>
+
+    my $home = $mojo->home;
+    $mojo    = $mojo->home(Mojo::Home->new);
 
 =head1 METHODS
 
@@ -123,6 +135,8 @@ Andreas Koenig.
 Andy Grundman
 
 Aristotle Pagaltzis
+
+Ask Bjoern Hansen
 
 Audrey Tang
 

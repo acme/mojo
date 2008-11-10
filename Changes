@@ -1,5 +1,14 @@
 This file documents the revision history for Perl extension Mojo.
 
+0.8010  2008-11-10 00:00:00
+        - MojoX::Dispatcher::Routes should be able to fail.
+        - Fixed / routes matching too much.
+        - Added support for local app specific scripts like
+          MyApp::Script::Daemon.
+        - Fixed typos.
+        - Cleaned up Mojo::Transaction. (Ask Bjoern Hansen)
+        - Added .perltidyrc. (Ask Bjoern Hansen)
+
 0.8009  2008-11-07 00:00:00
         - Cleaned up Mojo::Message callbacks and added tests.
         - Fixed escaping in Mojo::URL.
@@ -9,9 +18,20 @@ This file documents the revision history for Perl extension Mojo.
         - Mojo::Client now prefers writes over reads.
         - Added copy_to and move_to to Mojo::File.
         - Made the daemons about 20% faster.
-        - Cleaned up Mojo::File.
+        - Cleaned up Mojo::File. (Leon Brocard)
+        - Fallback to default renderer in MojoX::Renderer.
+          (Ask Bjoern Hansen)
         - Made Mojo::Base instantiation a little bit faster.
-        - Added documentation. (Marcus Ramberg)
+        - Added documentation to Mojo::Base. (Marcus Ramberg)
+        - Moved the home attribute from Mojolicious to Mojo.
+        - Fixed MojoX::Renderer to pass options through to the handler.
+          (Ask Bjoern Hansen)
+        - Fixed Mojo::Server::FastCGI according to the spec.
+        - Dispatchers now return true or false.
+        - Added documentation to Mojo::Home. (Mark Stosberg)
+        - Added documentation to Mojo::Buffer. (Mark Stosberg)
+        - Removed replace from Mojo::Buffer. (Mark Stosberg)
+        - Added buffer tests. (Mark Stosberg)
 
 0.8008  2008-11-07 00:00:00
         - Fixed multipart parsing for short requests.
