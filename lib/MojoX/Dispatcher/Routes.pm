@@ -44,13 +44,21 @@ sub dispatch {
         # Cache
         my $instance = $self->controllers->{$class};
 
+        # Captures
+        $c->match->captures($field);
+
+        # Dispatch
+        my $done;
         eval {
             $instance = $self->controllers->{$class}
               = Mojo::Loader->load_build($class) unless $instance;
 
             # Run action
-            $instance->$action($c);
+            $done = $instance->$action($c);
         };
+
+        # Break the chain
+        last unless $done;
 
         # Error
         if ($@) {

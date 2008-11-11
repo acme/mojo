@@ -53,6 +53,10 @@ sub new {
     # Startup
     $self->startup(@_);
 
+    # Environment
+    my $env = ($ENV{MOJO_ENV} || 'development') . '_env';
+    $self->$env if $self->can($env);
+
     # Load context class
     Mojo::Loader->new->load($self->ctx_class);
 
