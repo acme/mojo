@@ -54,12 +54,18 @@ sub new {
     $self->renderer->root($self->home->rel_dir('templates'));
     $self->static->root($self->home->rel_dir('public'));
 
+    # Mode
+    my $mode = $self->mode;
+
+    # Log file
+    $self->log->path($self->home->rel_file("log/$mode.log"));
+
+    # Run mode
+    $mode = $mode . '_mode';
+    $self->$mode if $self->can($mode);
+
     # Startup
     $self->startup(@_);
-
-    # Mode
-    my $mode = $self->mode . '_mode';
-    $self->$mode if $self->can($mode);
 
     # Load context class
     Mojo::Loader->new->load($self->ctx_class);

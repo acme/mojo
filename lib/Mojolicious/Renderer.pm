@@ -16,8 +16,26 @@ sub new {
     my $self = shift->SUPER::new(@_);
     $self->default_ext('phtml');
     $self->add_handler(phtml => sub {
-        my ($self, $c, $path) = @_;
-        Mojo::Template->new->render_file($path, $c);
+        my ($self, $args) = @_;
+
+        my $path = $args->{path};
+
+        # Check cache
+        $self->{_mt_cache} ||= {};
+        my $mt = $self->{_mt_cache}->{$path};
+
+        # No cache
+        unless ($mt) {
+
+            # Initialize
+            $mt = $self->{_mt_cache}->{$path} = Mojo::Template->new;
+            return $mt->render_file(
+                $path, $args->{output}, $args->{c}, $args
+            );
+        }
+
+        # Interpret again
+        $mt->interpret($args->{output}, $args->{c}, $args);
     });
     return $self;
 }

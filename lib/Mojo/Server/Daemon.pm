@@ -37,6 +37,8 @@ sub listen {
     # Non blocking
     $self->{listen}->blocking(0);
 
+    $self->app->log->info("Server started (http://127.0.0.1:$port)");
+
     # Friendly message
     print "Server available at http://127.0.0.1:$port.\n";
 }
@@ -310,11 +312,11 @@ sub _socket_name {
     # Connected?
     return undef unless $s->connected;
 
-    my $n = join ':', $s->sockaddr, $s->sockport, $s->peeraddr, $s->peerport;
-
     # Temporary workaround for win32 weirdness
-    $n =~ s/[^\w]/x/gi;
-
+    my $n = '';
+    for my $h ($s->sockaddr, $s->sockport, $s->peeraddr, $s->peerport) {
+        $n .= unpack 'H*', $h;
+    }
     return $n;
 }
 

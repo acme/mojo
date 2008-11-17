@@ -146,7 +146,9 @@ sub render_data {
     my $template = $self->get_data($data);
 
     # Render
-    return $self->renderer->render($template, @_);
+    my $output;
+    $self->renderer->render($template, \$output, @_);
+    return $output;
 }
 
 sub render_to_file {

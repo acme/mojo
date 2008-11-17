@@ -34,12 +34,12 @@ sub add_handler {
 
 sub render {
     my $self = shift;
-    my $tx   = shift;
+    my $c    = shift;
 
-    my $options = ref $_[0] ? $_[0] : {@_};
-    return 0 unless $options;
+    my $args = ref $_[0] ? $_[0] : {@_};
+    return undef unless $args;
 
-    my $template = $options->{template};
+    my $template = $args->{template};
     my $default = $self->default_ext;
     $template .= ".$default" if $default && $template !~ /\.\w+$/;
 
@@ -48,7 +48,7 @@ sub render {
     $path =~ /\.(\w+)$/;
     my $ext = $1;
 
-    return 0 unless $ext;
+    return undef unless $ext;
 
     my $handler = $self->handler->{$ext};
 
@@ -59,17 +59,27 @@ sub render {
         croak 'Need a valid handler for rendering' unless $handler;
     }
 
-    my $result = $handler->($self, $tx, $path, $options);
+    # Render
+    my $output;
+    return undef unless $handler->($self, {
+        args    => $args,
+        c       => $c,
+        output  => \$output,
+        path    => $path
+    });
 
-    return $result if $options->{partial};
+    # Partial
+    return $output if $args->{partial};
 
-    my $res = $tx->res;
-    $res->code(200) unless $tx->res->code;
-    $res->body($result);
+    # Response
+    my $res = $c->res;
+    $res->code(200) unless $c->res->code;
+    $res->body($output);
 
     my $type = $self->types->type($ext) || 'text/plain';
     $res->headers->content_type($type);
 
+    # Success!
     return 1;
 }
 
@@ -123,6 +133,6 @@ follwing the ones.
 
 =head2 C<render>
 
-    $renderer = $renderer->render($tx, {template => 'foo.phtml'});
+    $renderer = $renderer->render($c, {template => 'foo.phtml'});
 
 =cut
